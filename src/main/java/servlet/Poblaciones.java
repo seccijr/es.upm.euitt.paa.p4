@@ -2,20 +2,20 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.File;
 import java.util.Set;
 import java.util.SortedSet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import paa.provincias.IPoblacion;
 import paa.provincias.IAlmacenPoblaciones;
 import paa.provincias.IPoblacionAEMET;
+import model.Provincia;
 import model.ListaPoblaciones;
 import model.ListaProvincias;
 import almacen.AlmacenPoblaciones;
 import java.net.URISyntaxException;
+import java.net.URI;
 
 /**
  * Servlet implementation class Poblaciones
@@ -28,7 +28,8 @@ public class Poblaciones extends HttpServlet {
         super.init(servletConfig);
         almacen = new AlmacenPoblaciones();
         try {
-            String almacenPath = Poblaciones.class.getResource("almacen.dat").toURI().toString();
+            URI almacenUri = Poblaciones.class.getResource("/almacen.dat").toURI();
+            String almacenPath = new File(almacenUri).getAbsolutePath();
             almacen.recuperar(almacenPath);
         }
         catch(URISyntaxException e) {
@@ -40,8 +41,15 @@ public class Poblaciones extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         Set<String> setProvincias = almacen.getProvincias();
-        String[] provincias = setProvincias.toArray(new String[setProvincias.size()]);
-        ListaProvincias listaProvincias = new ListaProvincias(provincias);
+        ListaProvincias listaProvincias = new ListaProvincias();
+        for (String nombreProvincia: setProvincias) {
+            int poblaciones = almacen.getNumPoblaciones(nombreProvincia);
+            Provincia provincia = new Provincia(nombreProvincia, poblaciones);
+            listaProvincias.addProvincia(provincia);
+        }
+        request.setAttribute("listaProvincias", listaProvincias);
+        RequestDispatcher rd = getServletContext().getRequestDispatcher("/Poblaciones/listaProvincias.jsp");
+        rd.forward(request, response);
     }
 
     @Override

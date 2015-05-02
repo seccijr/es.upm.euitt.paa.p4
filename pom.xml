@@ -15,6 +15,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
@@ -57,7 +62,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <port>9090</port>
+                    <port>8080</port>
                     <path>/</path>
                     <useTestClasspath>false</useTestClasspath>
                 </configuration>
@@ -68,6 +73,11 @@
                         <version>1.0-SNAPSHOT</version>
                         <scope>system</scope>
                         <systemPath>${basedir}/lib/paa.provincias.3.0.jar</systemPath>
+                    </dependency>
+                    <dependency>
+                        <groupId>jstl</groupId>
+                        <artifactId>jstl</artifactId>
+                        <version>1.2</version>
                     </dependency>
                 </dependencies>
             </plugin>

@@ -1,21 +1,27 @@
 package model;
 
+import java.util.ArrayList;
+
 public class ListaProvincias {
-    private String[] provincias = null;
+    private ArrayList<Provincia> provincias = null;
 
     public ListaProvincias() {
-        provincias = new String[0];
+        provincias = new ArrayList<Provincia>();
     }
 
-    public ListaProvincias(String[] provincias) {
+    public ListaProvincias(ArrayList<Provincia> provincias) {
         this.provincias = provincias;
     }
 
-    public String[] getProvincias() {
+    public ArrayList<Provincia> getProvincias() {
         return provincias;
     }
 
-    public void setProvincias(String[] provincias) {
+    public void setProvincias(ArrayList<Provincia> provincias) {
         this.provincias = provincias;
+    }
+
+    public void addProvincia(Provincia provincia) {
+        provincias.add(provincia);
     }
 }
