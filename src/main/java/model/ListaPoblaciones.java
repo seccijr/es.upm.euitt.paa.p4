@@ -1,23 +1,36 @@
 package model;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
 import paa.provincias.IPoblacion;
 
 public class ListaPoblaciones {
-    private IPoblacion[] poblaciones = null;
+    private SortedSet<IPoblacion> poblaciones = null;
+    private String provincia = "";
 
     public ListaPoblaciones() {
-        poblaciones = new IPoblacion[0];
+        poblaciones = new TreeSet<IPoblacion>();
+        provincia = "";
     }
 
-    public ListaPoblaciones(IPoblacion[] poblaciones) {
+    public ListaPoblaciones(SortedSet<IPoblacion> poblaciones, String provincia) {
         this.poblaciones = poblaciones;
+        this.provincia = provincia;
     }
 
-    public IPoblacion[] getProvincias() {
+    public SortedSet<IPoblacion> getPoblaciones() {
         return poblaciones;
     }
 
-    public void setProvincias(IPoblacion[] poblaciones) {
+    public void setPoblaciones(SortedSet<IPoblacion> poblaciones) {
         this.poblaciones = poblaciones;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
     }
 }

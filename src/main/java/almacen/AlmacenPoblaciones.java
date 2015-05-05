@@ -2,15 +2,14 @@ package almacen;
 
 import paa.provincias.IPoblacion;
 import paa.provincias.IAlmacenPoblaciones;
+import java.io.FileNotFoundException;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.HashMap;
-import java.util.Collections;
 import java.io.*;
 
 public class AlmacenPoblaciones implements IAlmacenPoblaciones {
-    private HashMap<String, SortedSet<IPoblacion>> provincias = null;
+    private HashMap<String, SortedSet<IPoblacion>> almacenPoblaciones = null;
 
     /**
      * Class constructor for AlmacenPoblaciones
@@ -18,18 +17,18 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      * @return      an instance of AlmacenPoblaciones
      */
     public AlmacenPoblaciones() {
-        this.provincias = new HashMap<String, SortedSet<IPoblacion>>();
+        this.almacenPoblaciones = new HashMap<String, SortedSet<IPoblacion>>();
     }
 
     /**
      * Class constructor for AlmacenPoblaciones
      *
-     * @param provincias    Hashmap<String, SortedSet<IPoblacion>>
+     * @param almacenPoblaciones    Hashmap<String, SortedSet<IPoblacion>>
      *                              with the prefilled almacen
      * @return                      an instance of AlmacenPoblaciones
      */
-    public AlmacenPoblaciones(HashMap<String, SortedSet<IPoblacion>> provincias) {
-        this.provincias = provincias;
+    public AlmacenPoblaciones(HashMap<String, SortedSet<IPoblacion>> almacenPoblaciones) {
+        this.almacenPoblaciones = almacenPoblaciones;
     }
 
     /**
@@ -41,8 +40,8 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  correctamente la provincia
      */
     public boolean addProvincia(String provincia) {
-        if (!provincias.containsKey(provincia)) {
-            provincias.put(provincia, new PoblacionSet());
+        if (!almacenPoblaciones.containsKey(provincia)) {
+            almacenPoblaciones.put(provincia, new PoblacionSet());
             return true;
         }
 
@@ -60,10 +59,10 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  correctamente la población al contenedor
      */
     public boolean addPoblacion(String provincia, IPoblacion poblacion) {
-        if (this.provincias.containsKey(provincia)) {
-            PoblacionSet poblaciones = (PoblacionSet)this.provincias.get(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
             poblaciones.add(poblacion);
-            this.provincias.put(provincia, poblaciones);
+            this.almacenPoblaciones.put(provincia, poblaciones);
 
             return true;
         }
@@ -80,7 +79,7 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  provincia
      */
     public boolean containsProvincia(String provincia) {
-        return this.provincias.containsKey(provincia);
+        return this.almacenPoblaciones.containsKey(provincia);
     }
 
     /**
@@ -93,8 +92,8 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  población dentro de la provincia
      */
     public boolean containsPoblacion(String provincia, String nombre) {
-        if (this.provincias.containsKey(provincia)) {
-            PoblacionSet poblaciones = (PoblacionSet)this.provincias.get(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
 
             return poblaciones.contains(new Poblacion(nombre));
         }
@@ -112,8 +111,8 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  población dentro de la provincia
      */
     public boolean containsPoblacion(String provincia, IPoblacion poblacion) {
-        if (this.provincias.containsKey(provincia)) {
-            PoblacionSet poblaciones = (PoblacionSet)this.provincias.get(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
 
             return poblaciones.contains(poblacion);
         }
@@ -130,8 +129,8 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  la provincia
      */
     public boolean delProvincia(String provincia) {
-        if (this.provincias.containsKey(provincia)) {
-            SortedSet<IPoblacion> result = this.provincias.remove(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            SortedSet<IPoblacion> result = this.almacenPoblaciones.remove(provincia);
 
             return result != null;
         }
@@ -150,11 +149,11 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  la provincia
      */
     public boolean delPoblacion(String provincia, int posicion) {
-        if (this.provincias.containsKey(provincia)) {
-            PoblacionSet poblaciones = (PoblacionSet)this.provincias.get(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
             IPoblacion poblacion = poblaciones.find(posicion);
             boolean result = poblaciones.remove(poblacion);
-            this.provincias.put(provincia, poblaciones);
+            this.almacenPoblaciones.put(provincia, poblaciones);
 
             return result;
         }
@@ -173,11 +172,11 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  la provincia
      */
     public boolean delPoblacion(String provincia, String nombre) {
-        if (this.provincias.containsKey(provincia)) {
-            PoblacionSet poblaciones = (PoblacionSet)this.provincias.get(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
             IPoblacion poblacion = poblaciones.find(nombre);
             boolean result = poblaciones.remove(poblacion);
-            this.provincias.put(provincia, poblaciones);
+            this.almacenPoblaciones.put(provincia, poblaciones);
 
             return result;
         }
@@ -196,10 +195,10 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  la provincia
      */
     public boolean delPoblacion(String provincia, IPoblacion poblacion) {
-        if (this.provincias.containsKey(provincia)) {
-            PoblacionSet poblaciones = (PoblacionSet)this.provincias.get(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
             boolean result = poblaciones.remove(poblacion);
-            this.provincias.put(provincia, poblaciones);
+            this.almacenPoblaciones.put(provincia, poblaciones);
 
             return result;
         }
@@ -214,8 +213,8 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  almacén en un Set
      */
     public Set<String> getProvincias() {
-        if (this.provincias != null) {
-            return this.provincias.keySet();
+        if (this.almacenPoblaciones != null) {
+            return this.almacenPoblaciones.keySet();
         }
 
         return null;
@@ -232,8 +231,8 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      */
     public IPoblacion getPoblacion(String provincia, int posicion) {
         IPoblacion p = null;
-        if (this.provincias.containsKey(provincia)) {
-            PoblacionSet poblaciones = (PoblacionSet)this.provincias.get(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
             p = poblaciones.find(posicion);
         }
 
@@ -251,8 +250,8 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      */
     public IPoblacion getPoblacion(String provincia, String nombre) {
         IPoblacion p = null;
-        if (this.provincias.containsKey(provincia)) {
-            PoblacionSet poblaciones = (PoblacionSet)this.provincias.get(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
             p = poblaciones.find(nombre);
         }
 
@@ -267,8 +266,8 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      */
     public SortedSet<IPoblacion> getPoblaciones(String provincia) {
         PoblacionSet poblaciones = null;
-        if (this.provincias.containsKey(provincia)) {
-            poblaciones = (PoblacionSet)this.provincias.get(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
         }
 
         return poblaciones;
@@ -283,8 +282,8 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      */
     public int getNumPoblaciones(String provincia) {
         int result = Integer.MIN_VALUE;
-        if (this.provincias.containsKey(provincia)) {
-            result = this.provincias.get(provincia).size();
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            result = this.almacenPoblaciones.get(provincia).size();
         }
 
         return result;
@@ -300,20 +299,20 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *                  se ha llevado a cabo con éxito
      */
     public boolean ordenarPor(String provincia, int ordenarPor) {
-        if (this.provincias.containsKey(provincia)) {
-            SortedSet<IPoblacion> poblaciones = this.provincias.get(provincia);
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            SortedSet<IPoblacion> poblaciones = this.almacenPoblaciones.get(provincia);
             SortedSet<IPoblacion> ordenado;
             if (ordenarPor == IAlmacenPoblaciones.ORDENARPORNOMBRE) {
                 ordenado = new PoblacionSet();
                 ordenado.addAll(poblaciones);
-                provincias.put(provincia, ordenado);
+                almacenPoblaciones.put(provincia, ordenado);
 
                 return true;
             }
             if (ordenarPor == IAlmacenPoblaciones.ORDENARPORHABITANTES) {
                 ordenado = new PoblacionSet(new NumeroHabitantesComparator());
                 ordenado.addAll(poblaciones);
-                provincias.put(provincia, ordenado);
+                almacenPoblaciones.put(provincia, ordenado);
 
                 return true;
             }
@@ -333,7 +332,7 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
         try {
             FileOutputStream fileOut = new FileOutputStream(nombreFichero);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(this.provincias);
+            out.writeObject(this.almacenPoblaciones);
             out.close();
             fileOut.close();
 
@@ -358,11 +357,13 @@ public class AlmacenPoblaciones implements IAlmacenPoblaciones {
         try {
             FileInputStream fileIn = new FileInputStream(nombreFichero);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            this.provincias = (HashMap<String, SortedSet<IPoblacion>>) in.readObject();
+            this.almacenPoblaciones = (HashMap<String, SortedSet<IPoblacion>>) in.readObject();
             in.close();
             fileIn.close();
 
             return true;
+        }
+        catch (FileNotFoundException e) {
         }
         catch(IOException e) {
             e.printStackTrace();

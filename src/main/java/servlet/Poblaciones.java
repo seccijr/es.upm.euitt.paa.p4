@@ -48,6 +48,18 @@ public class Poblaciones extends HttpServlet {
             listaProvincias.addProvincia(provincia);
         }
         request.setAttribute("listaProvincias", listaProvincias);
+
+        ListaPoblaciones listaPoblaciones = null;
+        String provinciaParam = request.getParameter("provincia");
+        if (provinciaParam != null && !provinciaParam.isEmpty()) {
+            SortedSet<IPoblacion> poblaciones = almacen.getPoblaciones(provinciaParam);
+            listaPoblaciones = new ListaPoblaciones(poblaciones, provinciaParam);
+        }
+        else {
+            listaPoblaciones = new ListaPoblaciones();
+        }
+        request.setAttribute("listaPoblaciones", listaPoblaciones);
+
         RequestDispatcher rd = getServletContext().getRequestDispatcher("/Poblaciones/listaProvincias.jsp");
         rd.forward(request, response);
     }
